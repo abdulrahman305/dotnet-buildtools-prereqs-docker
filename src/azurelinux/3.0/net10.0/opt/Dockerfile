@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/azurelinux/base/core:3.0
+FROM mcr.microsoft.com/azurelinux/base/core:3.0 AS builder
 
 RUN tdnf update -y && \
     tdnf install -y \
@@ -8,8 +8,6 @@ RUN tdnf update -y && \
         tar \
         util-linux \
         wget \
-        # Runtime dependencies
-        icu \
         # LLVM Build tools
         binutils \
         clang \
@@ -29,11 +27,11 @@ RUN wget https://releases.llvm.org/release-keys.asc && \
     gpg --import release-keys.asc && \
     rm release-keys.asc && \
 # 2. Download llvm sources and signature, and verify signature
-    LLVM_VERSION=20.1.0 && \
+    LLVM_VERSION=20.1.8 && \
     wget -O llvm-project.src.tar.xz.sig https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/llvm-project-${LLVM_VERSION}.src.tar.xz.sig && \
-    echo "d59a826bd924580c4f186ec2d88774c7ca4ec78bfb6593f68793696f32d09ebb llvm-project.src.tar.xz.sig" | sha256sum -c && \
+    echo "ceb97d827cfd2e517b7d486381cb6e3183d8aee71947e7022c389259bb260696 llvm-project.src.tar.xz.sig" | sha256sum -c && \
     wget -O llvm-project.src.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/llvm-project-${LLVM_VERSION}.src.tar.xz && \
-    echo "4579051e3c255fb4bb795d54324f5a7f3ef79bd9181e44293d7ee9a7f62aad9a llvm-project.src.tar.xz" | sha256sum -c && \
+    echo "6898f963c8e938981e6c4a302e83ec5beb4630147c7311183cf61069af16333d llvm-project.src.tar.xz" | sha256sum -c && \
     gpg --verify llvm-project.src.tar.xz.sig && \
     rm llvm-project.src.tar.xz.sig
 
@@ -43,6 +41,7 @@ RUN mkdir llvm-project.src && \
     rm llvm-project.src.tar.xz && \
     mkdir build && cd build && \
     cmake ../llvm-project.src/llvm \
+        -DCMAKE_INSTALL_PREFIX=/opt/llvm \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_C_COMPILER=clang \
         -DCMAKE_CXX_COMPILER=clang++ \
@@ -50,3 +49,21 @@ RUN mkdir llvm-project.src && \
         -Wno-dev && \
     make -j $(getconf _NPROCESSORS_ONLN) && \
     make install
+
+
+FROM mcr.microsoft.com/azurelinux/base/core:3.0
+
+RUN tdnf update -y && \
+    tdnf install -y \
+        # Common dependencies
+        ca-certificates \
+        git \
+        tar \
+        util-linux \
+        wget \
+        shadow-utils \
+        # Runtime dependencies
+        icu
+
+# Install LLVM that we built from source
+COPY --from=builder /opt/llvm /usr/local

@@ -19,6 +19,7 @@ src/azurelinux/**/build/ @dotnet/aspnet-build @dotnet/dotnet-docker-reviewers
 src/azurelinux/**/docker-testrunner/ @dotnet/dotnet-docker-reviewers
 src/azurelinux/**/fpm/ @dotnet/runtime-infrastructure @dotnet/dotnet-docker-reviewers
 src/azurelinux/**/opt/ @dotnet/runtime-infrastructure @dotnet/dotnet-docker-reviewers
+src/azurelinux/**/source-build-test/ @dotnet/source-build @dotnet/dotnet-docker-reviewers
 
 # cbl-mariner
 src/cbl-mariner/**/android/ @dotnet/runtime-infrastructure @dotnet/dotnet-docker-reviewers
@@ -31,7 +32,7 @@ src/centos-stream/**/amd64/ @dotnet/source-build @dotnet/dotnet-docker-reviewers
 
 # debian
 src/debian/11/amd64/ @dotnet/source-build @dotnet/dotnet-docker-reviewers
-src/debian/12/gcc14/amd64/ @dotnet/runtime-infrastructure @dotnet/dotnet-docker-reviewers
+src/debian/*/gcc*/amd64/ @dotnet/runtime-infrastructure @dotnet/dotnet-docker-reviewers
 
 # fedora
 src/fedora/**/amd64/ @dotnet/source-build @dotnet/dotnet-docker-reviewers
@@ -40,8 +41,7 @@ src/fedora/**/amd64/ @dotnet/source-build @dotnet/dotnet-docker-reviewers
 src/ubuntu/**/debpkg/ @dotnet/runtime-infrastructure @dotnet/dotnet-docker-reviewers
 src/ubuntu/22.04/mlnet/ @dotnet/runtime-infrastructure @dotnet/dotnet-docker-reviewers
 src/ubuntu/22.04/opt/arm64v8/ @dotnet/runtime-infrastructure @dotnet/dotnet-docker-reviewers
-src/ubuntu/common/coredeps/ @dotnet/runtime-infrastructure @dotnet/dotnet-docker-reviewers
-src/ubuntu/20.04/amd64/ @dotnet/source-build @dotnet/dotnet-docker-reviewers
+src/ubuntu/22.04/coredeps/amd64/ @dotnet/runtime-infrastructure @dotnet/dotnet-docker-reviewers
 src/ubuntu/22.04/amd64/ @dotnet/source-build @dotnet/dotnet-docker-reviewers
 src/ubuntu/24.04/Dockerfile @dotnet/source-build @dotnet/dotnet-docker-reviewers
 

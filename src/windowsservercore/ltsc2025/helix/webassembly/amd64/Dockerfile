@@ -25,8 +25,8 @@ RUN curl -SL --output %TEMP%\%GIT_INSTALLER% https://github.com/git-for-windows/
 # Enable long paths
 RUN reg add HKLM\SYSTEM\CurrentControlSet\Control\FileSystem /v LongPathsEnabled /t REG_DWORD /d 1 /f
 
-# Install latest 18.x Node JS
-ENV NODE_RELEASE=18
+# Install latest 22.x Node JS
+ENV NODE_RELEASE=22
 
 RUN powershell -Command " `
         $ErrorActionPreference = 'Stop'; `
@@ -45,8 +45,9 @@ RUN powershell -Command " `
 # install latest jsvu and v8 engine
 RUN npm install jsvu -g `
     && npm exec -c "jsvu --os=win64 --engines=v8" `
-    && setx PATH "%PATH%;%USERPROFILE%\.jsvu\bin"
-RUN v8 -e "console.log(version());quit();"
+    && setx PATH "%PATH%;%USERPROFILE%\.jsvu\bin" `
+    && %USERPROFILE%\.jsvu\bin\v8 -e "console.log(version());quit();" `
+    && npm uninstall jsvu -g
 
 # install vc redistributable for llvm 19
 ENV VC_REDIST_VERSION 17
